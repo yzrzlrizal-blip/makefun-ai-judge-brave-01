@@ -11,11 +11,20 @@ ENTRY = (
 
 
 def main():
+    if not 1 <= len(ENTRY) <= 280 or not ENTRY.strip():
+        print(
+            "error: entry text must be 1-280 characters and not only whitespace "
+            f"(got {len(ENTRY)} characters)",
+            file=sys.stderr,
+        )
+        return 1
     output_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(output_dir, exist_ok=True)
     path = os.path.join(output_dir, "entry.txt")
-    with open(path, "w", encoding="utf-8") as f:
+    tmp_path = path + ".tmp"
+    with open(tmp_path, "w", encoding="utf-8") as f:
         f.write(ENTRY)
+    os.replace(tmp_path, path)
     return 0
 
 
